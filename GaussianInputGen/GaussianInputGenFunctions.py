@@ -1,17 +1,14 @@
 import os
 
-# This function generates a list of gaussian input names as well as extracts
+# This function generates a list of gaussian input names and titles as well as extracts
 # the names of original pdb files and their relative paths.
 # Rootdir argument is the directory from which the directory tree search starts
 
-# This function generates a list of gaussian input names as well as extracts
-# the names of original pdb files and their relative paths.
-# Rootdir argument is the directory from which the directory tree search starts
-
-def generateInputNames(rootdir='.'):
+def generateInputNames(rootdir='.', file_prefix='run'):
 
     rootdir_length = len(rootdir) + 1 # length of the root directory plus '/' sign
 
+    gaussian_titles = []
     gaussian_input_names = []
     pdb_filenames = []
     
@@ -28,12 +25,13 @@ def generateInputNames(rootdir='.'):
                 pdb_file = os.path.join(subdir, file)
                 pdb_filenames.append(pdb_file)
 
-                input_name = os.path.join(subdir, file)[rootdir_length:].replace('/', '_').replace('pdb','com')
-                gaussian_input_names.append(f'{input_name}-{file_counter}')
+                title = os.path.join(subdir, file)[rootdir_length:].replace('/', '_').replace('.pdb','')
+                gaussian_titles.append(f'{title}-{file_counter}')
+                gaussian_input_names.append(f'{file_prefix}-{file_counter}.com')
                 
     print(f'Found {file_counter} pdb files in {dir_counter} directories...\n')
     
-    return(pdb_filenames, gaussian_input_names)
+    return(pdb_filenames, gaussian_input_names, gaussian_titles)
 
 # This function reads a single PDB file and extracts all the useful data
 # for the gaussian input file
@@ -62,13 +60,13 @@ def readPDB(filename):
 # based on the data from the PDB file and
 # some additional gaussian-related info
 
-def writeGaussianInput(filename, atom_data, ncores, method, basis_set, keywords, charge, multiplicity):
+def writeGaussianInput(filename, title, atom_data, ncores, method, basis_set, keywords, charge, multiplicity):
     
     with open(filename, 'w') as file:
         file.write(f'%nprocshared={ncores} \n')
         file.write(f'%chk={filename.replace("com", "chk")} \n')
         file.write(f'# {method}/{basis_set} {keywords} \n\n')
-        file.write(f'{filename.replace(".com", "")} \n\n')
+        file.write(f'{title} \n\n')
         file.write(f'{charge} {multiplicity} \n')
         file.writelines(atom_data)
         file.write('\n')
@@ -78,15 +76,15 @@ def writeGaussianInput(filename, atom_data, ncores, method, basis_set, keywords,
 # This function generates gaussian input files corresponding
 # to every PDB file that is found in the directory tree
 
-def generateGaussianInput(pdb_filenames, gaussian_input_names, 
+def generateGaussianInput(pdb_filenames, gaussian_input_names, gaussian_titles, 
                           ncores='6', method='b3pw91', basis_set="6-31g(d')", 
                           keywords='empiricaldispersion=gd3', charge='2', multiplicity='1'):
     
-    print(f'Writing {len(gaussian_input_names)} gaussian input files using {ncores} CPU core(s), \
+    print(f'Writing {len(gaussian_titles)} gaussian input files using {ncores} CPU core(s), \
 {method}/{basis_set} level of theory, {keywords}, charge={charge} and multiplicity={multiplicity}.\n\n')
-    for pdbname, inputname in zip(pdb_filenames, gaussian_input_names):
+    for pdbname, inputname, title in zip(pdb_filenames, gaussian_input_names, gaussian_titles):
         atom_data = readPDB(pdbname)
-        writeGaussianInput(inputname, atom_data, ncores=ncores, method=method, 
+        writeGaussianInput(inputname, title, atom_data, ncores=ncores, method=method, 
                            basis_set=basis_set, keywords=keywords, charge=charge, multiplicity=multiplicity)
         
     print('Done! \n')
