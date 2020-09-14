@@ -1,5 +1,5 @@
 # MyScripts
 A collection of useful Python scripts
 
-# GaussianInputGen
+1. GaussianInputGen
 Generates gaussian input files from pdb files
