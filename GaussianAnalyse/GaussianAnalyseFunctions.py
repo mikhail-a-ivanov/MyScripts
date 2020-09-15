@@ -91,7 +91,43 @@ def writePerformanceStats(output_filenames, csv_name='performance.csv'):
     return
 
 
+# Collects information about energy from one output file
 
+def energyStats(file):
+    try:
+        file
+    except NameError:
+        print(f'Could not read energy stats. \n')
+
+    for line in file:
+        if 'SCF Done' in line:
+            scf_energy = line.split()[4]
+            assert scf_energy.replace('.', '', 1).replace('-', '', 1).isnumeric(), 'It is not possible to read the SCF energy. Check the format of the output. \n'
+
+    return(scf_energy)
+
+
+# Collects energy information for all output files and write a csv table
+
+def writeEnergyStats(output_filenames, csv_name='energy.csv'):
+
+    print(f'Collecting energy information and writing them to {csv_name} \n')
+
+    with open(csv_name, 'w', newline='') as csvfile:
+        file_writer = csv.writer(csvfile, delimiter=' ')
+
+        file_writer.writerow(['# Total number of output files = ', len(output_filenames)])
+        file_writer.writerow(['# Output filename', 'SCF energy, Hartree'])
+
+        for filename in output_filenames:
+            output = readOutput(filename)
+            scf_energy = energyStats(output)
+
+            file_writer.writerow([filename, scf_energy])
+
+    print('Done! \n')
+    
+    return
 
 
 
