@@ -26,7 +26,7 @@ def generateInputNames(rootdir='.', file_prefix='run'):
                 pdb_filenames.append(pdb_file)
 
                 title = os.path.join(subdir, file)[rootdir_length:].replace('/', '_').replace('.pdb','')
-                gaussian_titles.append(f'{title}-{file_counter}')
+                gaussian_titles.append(f'{title}-{file_prefix}-{file_counter}')
                 gaussian_input_names.append(f'{file_prefix}-{file_counter}.com')
                 
     print(f'Found {file_counter} pdb files in {dir_counter} directories...\n')
