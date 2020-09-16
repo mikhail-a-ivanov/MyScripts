@@ -69,7 +69,7 @@ def writeGaussianInput(filename, title, atom_data, ncores, method, basis_set, ke
         file.write(f'%nprocshared={ncores} \n')
         file.write(f'%chk={filename.replace("com", "chk")} \n')
         file.write(f'# {method}/{basis_set} {keywords} \n\n')
-        file.write(f'{title} \n\n')
+        file.write(f'Title - {title} \n\n')
         file.write(f'{charge} {multiplicity} \n')
         file.writelines(atom_data)
         file.write('\n')
@@ -96,15 +96,50 @@ def generateGaussianInput(pdb_filenames, gaussian_input_names, gaussian_titles,
 
     else:
         print('No pdb files were found! \n')
-        
 
-def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=20):
+
+# Generates N geometry optimization input files with the lowest energy.
+# The function uses energy stats csv file from GaussianAnalyse.py
+# It is implied that for every single point energy calculation output file 'run.log'
+# there is a 'run.com' input file. The function generates the geometry optimization
+# input file with the same geometry but with added keyword 'opt'
+
+def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, opt_keywords='opt', file_prefix='run_opt'):
+
+    print(f'Reading {energy_stats_filename}... \n')
 
     energy_stats = pd.read_csv(energy_stats_filename, delimiter=' ').sort_values('SCF energy, Hartree')
 
     selected_output_filenames = energy_stats.iloc[:, 0][:conformations_to_optimize].tolist()
 
+    assert selected_output_filenames != [], 'Could not find any confirmations to optimize!'
 
+    print(f'Generating geometry optimization files of {conformations_to_optimize} conformations with the lowest energy... \n')
+
+    for i in range(len(selected_output_filenames)):
+
+        output_filename = selected_output_filenames[i]
+        original_input = output_filename.replace('.log', '.com')
+        opt_filename = f'{file_prefix}-{i + 1}.com'
+
+        try:
+            with open(original_input, 'r') as file_input:
+                lines = file_input.readlines()
+        except NameError:
+            print(f'File {original_input} does not exist')
+        
+        with open(opt_filename, 'w') as file_opt:
+            for line in lines:
+                if '#' in line:
+                    file_opt.write(line.replace('\n', '') + opt_keywords + '\n')
+                elif 'Title' in line:
+                    file_opt.write(line.replace('\n', '') + 'optimization' + '\n')
+                else:
+                    file_opt.write(line)
+
+    print('Done! \n')
+
+    
     return
 
     
