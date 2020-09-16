@@ -118,7 +118,6 @@ def writeEnergyStats(output_filenames, csv_name='energy.csv'):
     with open(csv_name, 'w', newline='') as csvfile:
         file_writer = csv.writer(csvfile, delimiter=' ')
 
-        file_writer.writerow(['# Total number of output files = ', len(output_filenames)])
         file_writer.writerow(['# Output filename', 'SCF energy, Hartree'])
 
         for filename in output_filenames:

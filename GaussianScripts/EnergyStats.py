@@ -2,6 +2,4 @@ from GaussianAnalyse import findGaussianOutput, writePerformanceStats, writeEner
 
 output_filenames = findGaussianOutput()
 
-#writePerformanceStats(output_filenames, csv_name='performance.csv')
-
 writeEnergyStats(output_filenames, csv_name='energy.csv')
