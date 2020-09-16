@@ -1,5 +1,7 @@
 import os
 import csv
+import numpy as np
+import pandas as pd
 
 # This function generates a list of gaussian input names and titles as well as extracts
 # the names of original pdb files and their relative paths.
@@ -91,7 +93,11 @@ def generateGaussianInput(pdb_filenames, gaussian_input_names, gaussian_titles,
     print('Done! \n')
         
 
-def generateGaussianOpt()
+def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=20):
+
+    energy_stats = pd.read_csv(energy_stats_filename, delimiter=' ').sort_values('SCF energy, Hartree')
+
+    selected_output_filenames = energy_stats.iloc[:, 0][:conformations_to_optimize].tolist()
 
 
     return
