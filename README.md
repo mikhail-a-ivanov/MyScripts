@@ -1,8 +1,7 @@
 # MyScripts
 A collection of useful Python scripts
 
-- GaussianInputGen:
-Generates gaussian input files from pdb files
+1. GaussianScripts:
 
-- GaussianAnalyse:
-Analyse gaussian output files
+- Generates gaussian input files from pdb files
+- Analyse gaussian output files
