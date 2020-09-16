@@ -1,4 +1,4 @@
-from GaussianAnalyseFunctions import findGaussianOutput, writePerformanceStats, writeEnergyStats
+from GaussianAnalyse import findGaussianOutput, writePerformanceStats, writeEnergyStats
 
 output_filenames = findGaussianOutput()
 
