@@ -82,15 +82,20 @@ def writeGaussianInput(filename, title, atom_data, ncores, method, basis_set, ke
 def generateGaussianInput(pdb_filenames, gaussian_input_names, gaussian_titles, 
                           ncores='6', method='b3pw91', basis_set="6-31g(d')", 
                           keywords='empiricaldispersion=gd3', charge='2', multiplicity='1'):
+
+    if len(pdb_filenames) > 0:
     
-    print(f'Writing {len(gaussian_titles)} gaussian input files using {ncores} CPU core(s), \
-{method}/{basis_set} level of theory, {keywords}, charge={charge} and multiplicity={multiplicity}.\n\n')
-    for pdbname, inputname, title in zip(pdb_filenames, gaussian_input_names, gaussian_titles):
-        atom_data = readPDB(pdbname)
-        writeGaussianInput(inputname, title, atom_data, ncores=ncores, method=method, 
-                           basis_set=basis_set, keywords=keywords, charge=charge, multiplicity=multiplicity)
-        
-    print('Done! \n')
+        print(f'Writing {len(gaussian_titles)} gaussian input files using {ncores} CPU core(s), \
+    {method}/{basis_set} level of theory, {keywords}, charge={charge} and multiplicity={multiplicity}.\n\n')
+        for pdbname, inputname, title in zip(pdb_filenames, gaussian_input_names, gaussian_titles):
+            atom_data = readPDB(pdbname)
+            writeGaussianInput(inputname, title, atom_data, ncores=ncores, method=method, 
+                            basis_set=basis_set, keywords=keywords, charge=charge, multiplicity=multiplicity)
+            
+        print('Done! \n')
+
+    else:
+        print('No pdb files were found! \n')
         
 
 def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=20):
