@@ -129,3 +129,70 @@ def writeEnergyStats(output_filenames, csv_name='energy.csv'):
     print('Done! \n')
     
     return
+
+# This function reads the optimized geometry from an output file
+
+def readOptimizedGeom(file):
+    try:
+        file
+    except NameError:
+        print(f'Could not read optimized geometry. \n')
+     
+    header_rows = 4
+    geometry_columns = 6
+    optimization_completed_index = 0
+    optimized_geometry_starting_index = 0
+
+    count_atoms = True
+    optimization_completed = False
+
+    optimized_geometry = []
+            
+    for count, line in enumerate(lines, start=1):
+        if "NAtoms" in line and count_atoms == True:
+            try:
+                NAtoms = int(line.split()[1])
+            except ValueError:
+                print(f'Could not convert {NAtoms} to integer!')
+            count_atoms = False
+            print(f'Number of atoms = {NAtoms}')
+        if "Optimization completed." in line:
+            optimization_completed_index = count
+            print(f'Optimization completed (line {optimization_completed_index}).')
+            optimization_completed = True
+
+    if optimization_completed:
+        for count, line in enumerate(lines[optimization_completed_index:], start=1):
+            if "Standard orientation" in line:
+                optimized_geometry_starting_index = count + optimization_completed_index
+                print(f'Found optimized geometry starting at line {optimized_geometry_starting_index}.')
+
+        start_read_optimized_geometry = optimized_geometry_starting_index + header_rows
+        end_read_optimized_geometry = start_read_optimized_geometry + NAtoms
+
+        for line in lines[start_read_optimized_geometry:end_read_optimized_geometry]:
+            line = line.split()
+            assert len(line) == geometry_columns, 'Unexpected geometry format!'
+            for index, element in enumerate(line[0:3]):
+                try:
+                    line[index] = int(element)
+                except ValueError:
+                    print(f'Could not convert {element} to an integer!')
+                    
+            for index, element in enumerate(line[3:6], start=3):
+                try:
+                    line[index] = float(element)
+                except ValueError:
+                    print(f'Could not convert {element} to a float!')
+                    
+            optimized_geometry.append(line)
+
+        assert int(optimized_geometry[-1][0]) == NAtoms, 'Incorrect geometry data is read' 
+        assert len(optimized_geometry) == NAtoms, 'Read wrong number of atoms'
+        print('Optimized geometry saved.')
+
+    else:
+        print('Optimization is incomplete.')
+
+    return(optimized_geometry)
+            
