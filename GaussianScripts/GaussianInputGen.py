@@ -7,13 +7,22 @@ import pandas as pd
 # the names of original pdb files and their relative paths.
 # Rootdir argument is the directory from which the directory tree search starts
 
-def generateInputNames(rootdir='.', file_prefix='run'):
+def generateInputNames(rootdir='.', file_prefix='run', readPDB=True, readCOM=False):
 
     rootdir_length = len(rootdir) + 1 # length of the root directory plus '/' sign
 
     gaussian_titles = []
     gaussian_input_names = []
-    pdb_filenames = []
+
+    assert readPDB !=
+
+    if readPDB:
+        pdb_filenames = []
+        readCOM = False
+    
+    if readCOM:
+        com_filenames = []
+
     
     dir_counter = -1 # do not include the root dir
     file_counter = 0
