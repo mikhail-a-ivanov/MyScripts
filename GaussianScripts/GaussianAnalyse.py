@@ -191,15 +191,15 @@ def readOptimizedGeom(file):
             del(line[0])
             del(line[1])
 
+            # Element index
             line[0] = '{:<4d}'.format(line[0])
-
+            # Cartesian coordinates
             line[1] = '{:.8f}'.format(line[1])
             line[2] = '{:.8f}'.format(line[2])
             line[3] = '{:.8f}'.format(line[3])
                     
-            optimized_geometry.append(line)
+            optimized_geometry.append(f' {line[0]} {line[1]} {line[2]} {line[3]} \n')
 
-        assert int(optimized_geometry[-1][0]) == NAtoms, 'Incorrect geometry data is read' 
         assert len(optimized_geometry) == NAtoms, 'Read wrong number of atoms'
         print('Optimized geometry saved.')
 
