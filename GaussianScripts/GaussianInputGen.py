@@ -133,8 +133,8 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
                     for element in line.split():
                         if element.replace('-', '').isnumeric():
                             numbers += 1
-                                if numbers == 2:
-                                    charge_multiplicity_data = line
+                            if numbers == 2:
+                                charge_multiplicity_data = line
 
         except NameError:
             print(f'File {original_input} does not exist')
