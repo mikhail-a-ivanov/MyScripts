@@ -145,7 +145,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
                     if '#' in line:
                         file_opt.write(line.replace('\n', '') + opt_keywords + '\n')
                     elif 'Title' in line:
-                        file_opt.write(line.replace('\n', '') + 'optimization' + '\n')
+                        file_opt.write(line.replace('\n', '') + title_addition + '\n')
                     else:
                         file_opt.write(line)
         
