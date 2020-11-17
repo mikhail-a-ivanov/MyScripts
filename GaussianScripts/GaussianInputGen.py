@@ -169,7 +169,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
                     elif 'Title' in line:
                         file_opt.write(line.replace('\n', '') + 'optimization' + '\n')
                         title_section_written = True
-                    elif (percent_section_written and hashtag_section_written and title_section_written):
+                    elif (percent_section_written and hashtag_section_written and title_section_written and not charge_multiplicity_section_written):
                         file_opt.write(charge_multiplicity_data)
                         charge_multiplicity_section_written = True
                     elif (percent_section_written and hashtag_section_written and title_section_written and charge_multiplicity_section_written):
