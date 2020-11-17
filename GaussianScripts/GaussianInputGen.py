@@ -175,7 +175,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
                     elif (percent_section_written and hashtag_section_written and title_section_written and charge_multiplicity_section_written):
                         for geometry_line in optimized_geometry:
                             for element in geometry_line:
-                                file_opt.write(element)
+                                file_opt.write(str(element))
                                 file_opt.write(' ')
                             file_opt.write('\n')
                     
