@@ -138,7 +138,7 @@ def readOptimizedGeom(file):
     except NameError:
         print(f'Could not read optimized geometry. \n')
 
-    lines = file.readlines()
+    lines = file
      
     header_rows = 4
     geometry_columns = 6
