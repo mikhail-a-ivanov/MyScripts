@@ -1,7 +1,7 @@
-from GaussianInputGen import generateInputNames, generateGaussianInput
+from GaussianInputGen import generateInputNamesFromPDB, generateGaussianInput
 
 # Generate list of filenames
-pdb_filenames, gaussian_input_names, gaussian_titles = generateInputNames(rootdir='.', file_prefix='GRGDS+2')
+pdb_filenames, gaussian_input_names, gaussian_titles = generateInputNamesFromPDB(rootdir='.', file_prefix='GRGDS+2')
 
 # Generate gaussian input files
 generateGaussianInput(pdb_filenames, gaussian_input_names, gaussian_titles, 
