@@ -128,7 +128,7 @@ def writeEnergyStats(output_filenames, csv_name='energy.csv'):
 
 def readOptimizedGeom(file):
     """This function reads the optimized geometry from an output file"""
-    
+
     try:
         file
     except NameError:
@@ -197,7 +197,7 @@ def readOptimizedGeom(file):
             optimized_geometry.append(f' {line[0]} {line[1]} {line[2]} {line[3]} \n')
 
         assert len(optimized_geometry) == NAtoms, 'Read wrong number of atoms'
-        print('Optimized geometry saved.')
+        print('Optimized geometry saved.\n')
 
     else:
         print('Optimization is incomplete.')

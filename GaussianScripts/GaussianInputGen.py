@@ -159,6 +159,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
         opt_filename = f'{file_prefix}-{i + 1}.com'
 
         optimized_geometry_file = readOutput(output_filename)
+        print(f'Reading optimized geometry from {output_filename}')
         optimized_geometry = readOptimizedGeom(optimized_geometry_file)
 
         title = f'Optimized geometry is taken from {output_filename}'
