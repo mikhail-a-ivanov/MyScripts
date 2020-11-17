@@ -3,10 +3,8 @@ import csv
 import numpy as np
 import pandas as pd
 
-# This function finds all the gaussian output files in the
-# directory tree
-
 def findGaussianOutput(rootdir='.'):
+    """This function finds all the gaussian output files in the directory tree"""
 
     output_filenames = []
     
@@ -29,11 +27,11 @@ def findGaussianOutput(rootdir='.'):
     return(output_filenames)
 
 
-# This function reads the file and makes sure that the 
-# run has ended normally. It returns contents of the output
-# file for further analysis
-
 def readOutput(filename):
+    """This function reads the file and makes sure that the
+    run has ended normally. It returns contents of the output
+    file for further analysis"""
+
     lines = ''
     with open(filename, 'r') as file:
         lines = file.readlines()
@@ -42,9 +40,9 @@ def readOutput(filename):
     return(lines)
 
 
-# Collects performance statistics from one output file
-
 def performanceStats(file):
+    """Collects performance statistics from one output file"""
+
     try:
         file
     except NameError:
@@ -71,9 +69,8 @@ def performanceStats(file):
     return(ncores, elapsed_time)
 
 
-# Collects performance statistics for all output files and write a csv table
-
 def writePerformanceStats(output_filenames, csv_name='performance.csv'):
+    """Collects performance statistics for all output files and write a csv table"""
 
     print(f'Collecting performance stats and writing them to {csv_name} \n')
 
@@ -93,9 +90,8 @@ def writePerformanceStats(output_filenames, csv_name='performance.csv'):
     return
 
 
-# Collects information about energy from one output file
-
 def energyStats(file):
+    """Collects information about energy from one output file"""
     try:
         file
     except NameError:
@@ -109,9 +105,8 @@ def energyStats(file):
     return(scf_energy)
 
 
-# Collects energy information for all output files and write a csv table
-
 def writeEnergyStats(output_filenames, csv_name='energy.csv'):
+    """Collects energy information for all output files and write a csv table"""
 
     print(f'Collecting energy information and writing them to {csv_name} \n')
 
@@ -130,9 +125,10 @@ def writeEnergyStats(output_filenames, csv_name='energy.csv'):
     
     return
 
-# This function reads the optimized geometry from an output file
 
 def readOptimizedGeom(file):
+    """This function reads the optimized geometry from an output file"""
+    
     try:
         file
     except NameError:

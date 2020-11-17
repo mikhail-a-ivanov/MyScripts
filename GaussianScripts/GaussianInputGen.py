@@ -143,6 +143,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
                         method='b3pw91', basis_set="6-31g(d')", keywords='empiricaldispersion=gd3', title='', charge='2', multiplicity='1'):
     """Generates N geometry optimization input files with the lowest energy.
     The function uses energy stats csv file from GaussianAnalyse.py.
+    Geometry data is read from previous geometry optimization output file.
     """
 
     print(f'Reading {energy_stats_filename}... \n')
@@ -160,6 +161,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
         optimized_geometry_file = readOutput(output_filename)
         optimized_geometry = readOptimizedGeom(optimized_geometry_file)
 
+        title = f'Optimized geometry is taken from {output_filename}'
         writeGaussianInput(opt_filename, title, optimized_geometry, ncores, method, basis_set, keywords, charge, multiplicity)
 
     print('Done! \n')
