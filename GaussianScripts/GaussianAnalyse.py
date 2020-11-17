@@ -186,6 +186,16 @@ def readOptimizedGeom(file):
                     line[index] = float(element)
                 except ValueError:
                     print(f'Could not convert {element} to a float!')
+
+            # Format the geometry lines:
+            del(line[0])
+            del(line[1])
+
+            line[0] = '{:<4d}'.format(line[0])
+
+            line[1] = '{:.8f}'.format(line[1])
+            line[2] = '{:.8f}'.format(line[2])
+            line[3] = '{:.8f}'.format(line[3])
                     
             optimized_geometry.append(line)
 

@@ -98,7 +98,7 @@ def generateGaussianInput(pdb_filenames, gaussian_input_names, gaussian_titles,
         print('No pdb files were found! \n')
 
 
-def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, opt_keywords='opt', file_prefix='run_opt', keep_geometry=True):
+def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, opt_keywords='opt', file_prefix='run_opt', title_addition='', keep_geometry=True):
     """Generates N geometry optimization input files with the lowest energy.
     The function uses energy stats csv file from GaussianAnalyse.py.
     It is implied that for every single point energy calculation output file 'run.log'
@@ -167,17 +167,20 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
                         file_opt.write(line.replace('\n', '') + opt_keywords + '\n')
                         hashtag_section_written = True
                     elif 'Title' in line:
-                        file_opt.write(line.replace('\n', '') + 'optimization' + '\n')
+                        file_opt.write(line.replace('\n', '') + title_addition + '\n')
                         title_section_written = True
-                    elif (percent_section_written and hashtag_section_written and title_section_written and not charge_multiplicity_section_written):
-                        file_opt.write(charge_multiplicity_data)
-                        charge_multiplicity_section_written = True
-                    elif (percent_section_written and hashtag_section_written and title_section_written and charge_multiplicity_section_written):
-                        for geometry_line in optimized_geometry:
-                            for element in geometry_line:
-                                file_opt.write(str(element))
-                                file_opt.write(' ')
-                            file_opt.write('\n')
+
+                if (percent_section_written and hashtag_section_written and title_section_written and not charge_multiplicity_section_written):
+                    file_opt.write(charge_multiplicity_data)
+                    file_opt.write('\n')
+                    charge_multiplicity_section_written = True
+                
+                elif (percent_section_written and hashtag_section_written and title_section_written and charge_multiplicity_section_written):
+                    for geometry_line in optimized_geometry:
+                        for element in geometry_line:
+                            file_opt.write(str(element))
+                            file_opt.write(' ')
+                        file_opt.write('\n')
                     
     print('Done! \n')
 
