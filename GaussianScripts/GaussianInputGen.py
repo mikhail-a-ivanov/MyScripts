@@ -68,7 +68,7 @@ def writeGaussianInput(filename, title, atom_data, ncores, gpu, method, basis_se
     with open(filename, 'w') as file:
         file.write(f'%cpu={range(int(ncores))[0]}-{range(int(ncores))[-1]} \n')
         if gpu:
-            file.write(f'%gpucpu=0=0 \n)') # dummy %gpucpu directive for Kebnekaise gpu runs
+            file.write(f'%gpucpu=0=0 \n') # dummy %gpucpu directive for Kebnekaise gpu runs
         file.write(f'%chk={filename.replace("com", "chk")} \n')
         file.write(f'# {method}/{basis_set} {keywords} \n\n')
         file.write(f'Title - {title} \n\n')
