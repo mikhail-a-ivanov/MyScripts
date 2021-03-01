@@ -60,12 +60,13 @@ def readPDB(filename):
     return(atom_data)
 
 
-def writeGaussianInput(filename, title, atom_data, ncores, gpu, method, basis_set, keywords, charge, multiplicity):
+def writeGaussianInput(filename, title, atom_data, mem, ncores, gpu, method, basis_set, keywords, charge, multiplicity):
     """This function writes a single gaussian input file
     based on the data from the geometry file and
     some additional gaussian-related info."""
     
     with open(filename, 'w') as file:
+        file.write(f'%mem={mem}gb \n')
         file.write(f'%cpu={range(int(ncores))[0]}-{range(int(ncores))[-1]} \n')
         if gpu:
             file.write(f'%gpucpu=0=0 \n') # dummy %gpucpu directive for Kebnekaise gpu runs
@@ -80,7 +81,7 @@ def writeGaussianInput(filename, title, atom_data, ncores, gpu, method, basis_se
 
 
 def generateGaussianInputfromPDB(pdb_filenames, gaussian_input_names, gaussian_titles, 
-                          ncores='6', gpu=False, method='b3pw91', basis_set="6-31g(d')", 
+                          mem=12, ncores='6', gpu=False, method='b3pw91', basis_set="6-31g(d')", 
                           keywords='empiricaldispersion=gd3', charge='2', multiplicity='1'):
     """This function generates gaussian input files corresponding
     to every PDB file that is found in the directory tree"""
@@ -91,7 +92,7 @@ def generateGaussianInputfromPDB(pdb_filenames, gaussian_input_names, gaussian_t
     {method}/{basis_set} level of theory, {keywords}, charge={charge} and multiplicity={multiplicity}.\n\n')
         for pdbname, inputname, title in zip(pdb_filenames, gaussian_input_names, gaussian_titles):
             atom_data = readPDB(pdbname)
-            writeGaussianInput(inputname, title, atom_data, ncores=ncores, gpu=gpu, method=method, 
+            writeGaussianInput(inputname, title, atom_data, mem=mem, ncores=ncores, gpu=gpu, method=method, 
                             basis_set=basis_set, keywords=keywords, charge=charge, multiplicity=multiplicity)
             
         print('Done! \n')
@@ -141,7 +142,7 @@ def generateGaussianOptFromSP(energy_stats_filename='energy.csv', conformations_
     return
 
 
-def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, file_prefix='run_opt', ncores='6', gpu=False,
+def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, file_prefix='run_opt', mem=12, ncores='6', gpu=False,
                         method='b3pw91', basis_set="6-31g(d')", keywords='empiricaldispersion=gd3', title='', charge='2', multiplicity='1'):
     """Generates N geometry optimization input files with the lowest energy.
     The function uses energy stats csv file from GaussianAnalyse.py.
@@ -165,7 +166,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
         optimized_geometry = readOptimizedGeom(optimized_geometry_file)
 
         title = f'Optimized geometry is taken from {output_filename}'
-        writeGaussianInput(opt_filename, title, optimized_geometry, ncores, gpu, method, basis_set, keywords, charge, multiplicity)
+        writeGaussianInput(opt_filename, title, optimized_geometry, mem, ncores, gpu, method, basis_set, keywords, charge, multiplicity)
 
     print('Done! \n')
 
