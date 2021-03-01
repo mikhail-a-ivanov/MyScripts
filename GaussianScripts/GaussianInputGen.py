@@ -2,7 +2,7 @@ import os
 import csv
 import numpy as np
 import pandas as pd
-from GaussianAnalyse import readOutput, readOptimizedGeom
+from GaussianAnalyse import readOutput, readOptimizedGeom, checkOutput
 
 def generateInputNamesFromPDB(rootdir='.', file_prefix='run'):
     """This function generates a list of gaussian input names, titles 
@@ -172,5 +172,42 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
 
     return
 
-    
 
+def continueFreq(output_filenames, freq_keywords='geom=allcheck guess=read freq Temperature=4 Pressure=0.000001'):
+    """Takes optimization job input files and continues freq job
+    using geometry from the chk file."""
+
+    print(f'Checking {len(output_filenames)} output files... \n')
+
+    incomplete_job_indices = []
+
+    for i in range(len(output_filenames)):
+        if not checkOutput(output_filenames[i]):
+            incomplete_job_indices.append(i)
+            print(f'{output_filenames[i].replace("./", "").replace(".log", "")} job has not finished succesfully.')
+
+    filtered_output_filenames = [output_filenames[i] for i in range(len(output_filenames)) if i not in incomplete_job_indices]
+
+
+    input_filenames = [filtered_output_filenames[i].replace('.log', '.com') for i in range(len(filtered_output_filenames))]
+    new_input_filenames = [input_filenames[i].replace('./', '').replace('.com', '_freq.com') for i in range(len(input_filenames))]
+
+    print(f'\nWriting {len(input_filenames)} input files for frequency calculations... \n')
+
+    for input_file_index in range(len(input_filenames)):
+        lines = ''
+        with open(input_filenames[input_file_index], 'r') as file1:
+            lines = file1.readlines()
+
+        with open(new_input_filenames[input_file_index], 'w') as file2:
+            for line in lines:
+                if '#' not in line:
+                    file2.write(line)
+                else:
+                    file2.write(line.replace('opt', freq_keywords))
+                    file2.write('\n')
+                    break
+
+    print('Done! \n')
+
+    return

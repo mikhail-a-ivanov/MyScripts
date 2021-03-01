@@ -39,6 +39,20 @@ def readOutput(filename):
 
     return(lines)
 
+def checkOutput(filename):
+    """This function checks whether the job has been
+    finished successfully."""
+
+    lines = ''
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+
+    if 'Normal termination' in lines[-1]:
+        return True
+    
+    else:
+        return False
+
 
 def performanceStats(file):
     """Collects performance statistics from one output file"""
