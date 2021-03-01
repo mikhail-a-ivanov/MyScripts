@@ -60,13 +60,15 @@ def readPDB(filename):
     return(atom_data)
 
 
-def writeGaussianInput(filename, title, atom_data, ncores, method, basis_set, keywords, charge, multiplicity):
+def writeGaussianInput(filename, title, atom_data, ncores, gpu, method, basis_set, keywords, charge, multiplicity):
     """This function writes a single gaussian input file
     based on the data from the geometry file and
     some additional gaussian-related info."""
     
     with open(filename, 'w') as file:
-        file.write(f'%nprocshared={ncores} \n')
+        file.write(f'%cpu={range(ncores[0])}-{range(ncores[-1])} \n')
+        if gpu:
+            file.write(f'%gpucpu=0=0 \n)') # dummy %gpucpu directive for Kebnekaise gpu runs
         file.write(f'%chk={filename.replace("com", "chk")} \n')
         file.write(f'# {method}/{basis_set} {keywords} \n\n')
         file.write(f'Title - {title} \n\n')
@@ -78,7 +80,7 @@ def writeGaussianInput(filename, title, atom_data, ncores, method, basis_set, ke
 
 
 def generateGaussianInputfromPDB(pdb_filenames, gaussian_input_names, gaussian_titles, 
-                          ncores='6', method='b3pw91', basis_set="6-31g(d')", 
+                          ncores='6', gpu=False, method='b3pw91', basis_set="6-31g(d')", 
                           keywords='empiricaldispersion=gd3', charge='2', multiplicity='1'):
     """This function generates gaussian input files corresponding
     to every PDB file that is found in the directory tree"""
@@ -139,7 +141,7 @@ def generateGaussianOptFromSP(energy_stats_filename='energy.csv', conformations_
     return
 
 
-def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, file_prefix='run_opt', ncores='6', 
+def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, file_prefix='run_opt', ncores='6', gpu=False,
                         method='b3pw91', basis_set="6-31g(d')", keywords='empiricaldispersion=gd3', title='', charge='2', multiplicity='1'):
     """Generates N geometry optimization input files with the lowest energy.
     The function uses energy stats csv file from GaussianAnalyse.py.
