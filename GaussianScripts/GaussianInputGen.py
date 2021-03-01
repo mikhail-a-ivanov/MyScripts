@@ -91,7 +91,7 @@ def generateGaussianInputfromPDB(pdb_filenames, gaussian_input_names, gaussian_t
     {method}/{basis_set} level of theory, {keywords}, charge={charge} and multiplicity={multiplicity}.\n\n')
         for pdbname, inputname, title in zip(pdb_filenames, gaussian_input_names, gaussian_titles):
             atom_data = readPDB(pdbname)
-            writeGaussianInput(inputname, title, atom_data, ncores=ncores, method=method, 
+            writeGaussianInput(inputname, title, atom_data, ncores=ncores, gpu=gpu, method=method, 
                             basis_set=basis_set, keywords=keywords, charge=charge, multiplicity=multiplicity)
             
         print('Done! \n')
@@ -141,13 +141,8 @@ def generateGaussianOptFromSP(energy_stats_filename='energy.csv', conformations_
     return
 
 
-<<<<<<< HEAD
 def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, file_prefix='run_opt', ncores='6', gpu=False,
                         method='b3pw91', basis_set="6-31g(d')", keywords='empiricaldispersion=gd3', title='', charge='2', multiplicity='1'):
-=======
-def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_optimize=1, file_prefix='run_opt', ncores='6', 
-                        method='b3pw91', basis_set="6-31g(d')", keywords='empiricaldispersion=gd3', charge='2', multiplicity='1'):
->>>>>>> a06fa4b258339783f898786c84cb333335fde5fa
     """Generates N geometry optimization input files with the lowest energy.
     The function uses energy stats csv file from GaussianAnalyse.py.
     Geometry data is read from previous geometry optimization output file.
@@ -170,7 +165,7 @@ def generateGaussianOpt(energy_stats_filename='energy.csv', conformations_to_opt
         optimized_geometry = readOptimizedGeom(optimized_geometry_file)
 
         title = f'Optimized geometry is taken from {output_filename}'
-        writeGaussianInput(opt_filename, title, optimized_geometry, ncores, method, basis_set, keywords, charge, multiplicity)
+        writeGaussianInput(opt_filename, title, optimized_geometry, ncores, gpu, method, basis_set, keywords, charge, multiplicity)
 
     print('Done! \n')
 
